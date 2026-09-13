@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Filmmaker Club — movie screenings, filmmaker events and cinematic experiences.">
+  <title>The Filmmaker Club | Screenings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="#">THE <span>FILMMAKER</span> CLUB</a>
+    <a class="nav-link" href="#screening">Upcoming Screening</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="eyebrow">THE FILMMAKER CLUB PRESENTS</p>
+        <h1 id="heroMovie">MOVIE<br><em>SCREENING</em></h1>
+        <p class="hero-copy">Stories worth watching. People worth meeting.</p>
+        <a class="btn btn-primary" href="#screening">BOOK TICKETS</a>
+      </div>
+    </section>
+
+    <section class="screening" id="screening">
+      <div class="poster-wrap">
+        <div class="poster-placeholder">
+          <span>POSTER</span>
+          <strong id="posterMovie">MOVIE<br>POSTER</strong>
+        </div>
+      </div>
+
+      <div class="details">
+        <p class="eyebrow">UPCOMING SCREENING</p>
+        <h2 id="movieTitle">Movie Screening</h2>
+        <div class="meta">
+          <span>📅 <b id="eventDate">Saturday, 18 October 2026</b></span>
+          <span>🕐 <b id="eventTime">6:30 PM</b></span>
+          <span>📍 <b id="eventVenue">Venue to be announced</b></span>
+        </div>
+        <p id="eventDescription">Join The Filmmaker Club for a special movie screening followed by a space to connect, discuss and celebrate cinema.</p>
+
+        <div class="ticket-card">
+          <div>
+            <small>TICKETS FROM</small>
+            <strong id="ticketPrice">₹199</strong>
+          </div>
+          <div class="availability">
+            <div><span id="ticketsLeft">100</span> seats left</div>
+            <div class="bar"><i id="barFill"></i></div>
+          </div>
+          <button class="btn btn-primary" onclick="openBooking()">GET TICKETS</button>
+        </div>
+
+        <div class="waitlist-note">
+          Sold out? Join the waiting list and we'll contact you if a seat opens up.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="bookingModal" aria-hidden="true">
+    <div class="modal-backdrop" onclick="closeBooking()"></div>
+    <div class="modal-card">
+      <button class="close" onclick="closeBooking()" aria-label="Close">×</button>
+      <p class="eyebrow">RESERVE YOUR SEAT</p>
+      <h2>Book tickets</h2>
+      <form id="bookingForm">
+        <label>Full name<input required id="name" placeholder="Your name"></label>
+        <label>Mobile number<input required id="phone" type="tel" placeholder="+91 98765 43210"></label>
+        <label>Email<input required id="email" type="email" placeholder="you@example.com"></label>
+        <label>Tickets
+          <select id="quantity">
+            <option value="1">1 ticket</option><option value="2">2 tickets</option>
+            <option value="3">3 tickets</option><option value="4">4 tickets</option>
+            <option value="5">5 tickets</option>
+          </select>
+        </label>
+        <button class="btn btn-primary full" type="submit">CONFIRM BOOKING</button>
+      </form>
+      <p class="fine">This demo confirms the booking in your browser. Connect a database/payment/email provider for production use.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="ticketModal" aria-hidden="true">
+    <div class="modal-backdrop" onclick="closeTicket()"></div>
+    <div class="modal-card ticket">
+      <button class="close" onclick="closeTicket()" aria-label="Close">×</button>
+      <p class="eyebrow">BOOKING CONFIRMED</p>
+      <h2>Your ticket</h2>
+      <div class="ticket-code" id="ticketCode">TFC-000000</div>
+      <div class="ticket-info">
+        <b id="ticketName">Guest</b>
+        <span id="ticketMovie">Movie Screening</span>
+        <span id="ticketDate">Saturday, 18 October 2026 · 6:30 PM</span>
+        <span id="ticketVenue">Venue to be announced</span>
+        <span id="ticketQty">1 ticket</span>
+      </div>
+      <div class="qr-placeholder" id="qrBox">QR</div>
+      <p class="fine">Show this ticket at the entrance. A production version will use a secure, server-validated QR code.</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

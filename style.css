@@ -1,0 +1,44 @@
+:root{
+  --bg:#080808; --panel:#111111; --text:#f4f1ea; --muted:#a6a29a;
+  --line:#292929; --accent:#e9c46a; --max:1180px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid var(--line);position:absolute;top:0;left:0;right:0;z-index:5;background:linear-gradient(#0008,transparent)}
+.brand{color:#fff;text-decoration:none;font-size:13px;letter-spacing:2px;font-weight:700}.brand span{font-weight:400}
+.nav-link{color:#fff;text-decoration:none;font-size:13px;letter-spacing:1px}
+.hero{min-height:760px;display:flex;align-items:center;position:relative;background:
+radial-gradient(circle at 75% 35%,#4a3a1f55,transparent 25%),
+linear-gradient(115deg,#111 0%,#17120d 45%,#080808 100%);overflow:hidden}
+.hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,#ffffff03 13px 14px);mix-blend-mode:overlay}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at 65% 50%,transparent 0,#0006 65%,#000 100%)}
+.hero-content{position:relative;z-index:2;width:min(var(--max),90%);margin:auto;padding-top:80px}
+.eyebrow{font-size:11px;letter-spacing:3px;color:var(--accent);font-weight:700;margin:0 0 18px}
+h1,h2{font-family:"Playfair Display",serif;margin:0} h1{font-size:clamp(58px,9vw,126px);line-height:.86;letter-spacing:-4px} h1 em{font-style:italic;color:#d8d3c9}
+.hero-copy{font-size:18px;color:#d0cbc1;max-width:480px;margin:30px 0}
+.btn{border:0;padding:15px 24px;font-weight:800;letter-spacing:1.5px;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--accent);color:#15120d}.btn-primary:hover{filter:brightness(1.08)}
+.screening{max-width:var(--max);width:90%;margin:0 auto;padding:110px 0;display:grid;grid-template-columns:390px 1fr;gap:80px;align-items:center}
+.poster-wrap{aspect-ratio:2/3}.poster-placeholder{height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:30px;background:
+linear-gradient(155deg,#272016,#6c5838 42%,#18140f 75%,#080808);border:1px solid #393126;box-shadow:0 25px 70px #000}
+.poster-placeholder span{font-size:9px;letter-spacing:3px;color:#e9c46a}.poster-placeholder strong{font-family:"Playfair Display";font-size:45px;line-height:.9;margin-top:12px}
+.details h2{font-size:clamp(40px,6vw,72px);line-height:1;margin-bottom:28px}
+.meta{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px;margin-bottom:26px}.meta span{padding:10px 12px;background:#101010;border:1px solid var(--line)}
+.details>p:not(.eyebrow){color:#b8b4ac;line-height:1.8;max-width:650px}
+.ticket-card{margin-top:35px;padding:22px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ticket-card small{display:block;color:var(--muted);letter-spacing:2px;font-size:9px}.ticket-card strong{font-size:27px}
+.availability{flex:1;min-width:150px;color:#ddd;font-size:12px}.bar{height:4px;background:#292929;margin-top:8px}.bar i{display:block;height:100%;background:var(--accent);width:100%}
+.waitlist-note{font-size:11px;color:#777;margin-top:14px}
+.modal{display:none;position:fixed;inset:0;z-index:20;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:#000c;backdrop-filter:blur(8px)}
+.modal-card{position:relative;z-index:1;background:#111;border:1px solid #333;width:min(480px,100%);padding:35px;box-shadow:0 30px 100px #000}
+.close{position:absolute;right:16px;top:12px;background:none;border:0;color:#aaa;font-size:30px;cursor:pointer}
+.modal-card h2{font-size:42px;margin-bottom:25px}
+label{display:block;font-size:12px;color:#bbb;margin:15px 0}input,select{display:block;width:100%;margin-top:7px;padding:13px;background:#0a0a0a;border:1px solid #333;color:#fff;font:inherit}input:focus,select:focus{outline:1px solid var(--accent)}
+.full{width:100%;margin-top:10px}.fine{font-size:10px;color:#666;line-height:1.6;margin-top:18px}
+.ticket-code{font-family:monospace;letter-spacing:2px;background:#1c1c1c;padding:12px;text-align:center;margin:10px 0 20px}.ticket-info{display:grid;gap:8px;color:#bbb;font-size:13px}.ticket-info b{color:#fff;font-size:18px}
+.qr-placeholder{width:170px;height:170px;margin:25px auto;background:
+linear-gradient(90deg,#fff 10%,#111 10% 20%,#fff 20% 35%,#111 35% 42%,#fff 42% 55%,#111 55% 63%,#fff 63% 80%,#111 80% 90%,#fff 90%),
+linear-gradient(#fff 10%,#111 10% 20%,#fff 20% 35%,#111 35% 42%,#fff 42% 55%,#111 55% 63%,#fff 63% 80%,#111 80% 90%,#fff 90%);
+background-blend-mode:multiply;display:grid;place-items:center;color:#111;font-weight:900;font-size:12px;border:8px solid #fff}
+@media(max-width:800px){.screening{grid-template-columns:1fr;gap:45px;padding:75px 0}.poster-wrap{width:min(300px,100%);margin:auto}.hero{min-height:680px}.nav-link{display:none}.ticket-card{align-items:stretch}.ticket-card .btn{width:100%}}
