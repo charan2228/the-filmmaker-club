@@ -1,111 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="The Filmmaker Club — movie screenings, filmmaker events and cinematic experiences.">
-  <title>The Filmmaker Club | Screenings</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Filmmaker Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="nav">
-    <a class="brand" href="#">THE <span>FILMMAKER</span> CLUB</a>
-    <a class="nav-link" href="#screening">Upcoming Screening</a>
-  </header>
+<body class="public-page">
+<header class="site-header"><a class="logo" id="siteLogo" href="#">THE FILMMAKER CLUB</a><nav><a href="#screening">Screening</a><a href="#about">About</a><a href="admin.html">Admin</a></nav></header>
+<main>
+<section class="hero" id="heroSection"><div class="shade"></div><div class="hero-copy"><span class="kicker" id="heroKicker">THE FILMMAKER CLUB PRESENTS</span><h1 id="heroTitle">A NIGHT<br><em>AT THE MOVIES</em></h1><p id="heroSubtitle">A curated screening experience for people who love cinema.</p><div class="actions"><button class="btn primary" onclick="openBooking()">BOOK TICKETS</button><a class="btn ghost" href="#screening">VIEW DETAILS</a></div></div><div class="hero-meta"><span id="heroDate">18 OCT 2026</span><span id="heroVenue">HYDERABAD</span></div></section>
+<section class="marquee"><div class="track"><span id="marqueeText1"></span><span id="marqueeText2"></span></div></section>
+<section class="screening" id="screening">
+<div class="poster-wrap"><div class="poster"><img id="posterImage" alt=""><div class="poster-fallback" id="posterFallback"><small>THE FILMMAKER CLUB</small><strong id="posterFallbackTitle">MOVIE<br>SCREENING</strong></div></div><div class="poster-caption"><span id="posterTag">SPECIAL SCREENING</span><span id="posterYear">2026</span></div></div>
+<div class="event-copy"><span class="section-no">01 / UPCOMING</span><p class="eyebrow" id="eventEyebrow"></p><h2 id="movieTitle"></h2><p class="lead" id="eventDescription"></p>
+<div class="details"><div><span>DATE</span><strong id="eventDate"></strong></div><div><span>TIME</span><strong id="eventTime"></strong></div><div class="wide"><span>VENUE</span><strong id="eventVenue"></strong></div></div>
+<div class="ticket-panel"><div><span>TICKETS</span><strong id="ticketPrice"></strong></div><div><div class="stock-row"><span>Availability</span><strong><b id="ticketsLeft"></b> left</strong></div><div class="bar"><i id="stockFill"></i></div></div><button class="btn primary" onclick="openBooking()">GET TICKETS</button></div>
+<button class="text-btn" onclick="openWaitlist()">Sold out? Join the waiting list →</button>
+</div></section>
+<section class="about" id="about"><div><span class="section-no">02 / THE CLUB</span><h3 id="aboutTitle"></h3></div><div><p id="aboutText"></p><p class="signature" id="aboutSignature"></p></div></section>
+<section class="cta"><span id="ctaKicker"></span><h3 id="ctaTitle"></h3><button class="btn light" onclick="openBooking()">RESERVE YOUR SEAT</button></section>
+</main>
+<footer><div class="logo" id="footerLogo"></div><p id="footerText"></p><p id="footerInstagram"></p></footer>
 
-  <main>
-    <section class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <p class="eyebrow">THE FILMMAKER CLUB PRESENTS</p>
-        <h1 id="heroMovie">MOVIE<br><em>SCREENING</em></h1>
-        <p class="hero-copy">Stories worth watching. People worth meeting.</p>
-        <a class="btn btn-primary" href="#screening">BOOK TICKETS</a>
-      </div>
-    </section>
-
-    <section class="screening" id="screening">
-      <div class="poster-wrap">
-        <div class="poster-placeholder">
-          <span>POSTER</span>
-          <strong id="posterMovie">MOVIE<br>POSTER</strong>
-        </div>
-      </div>
-
-      <div class="details">
-        <p class="eyebrow">UPCOMING SCREENING</p>
-        <h2 id="movieTitle">Movie Screening</h2>
-        <div class="meta">
-          <span>📅 <b id="eventDate">Saturday, 18 October 2026</b></span>
-          <span>🕐 <b id="eventTime">6:30 PM</b></span>
-          <span>📍 <b id="eventVenue">Venue to be announced</b></span>
-        </div>
-        <p id="eventDescription">Join The Filmmaker Club for a special movie screening followed by a space to connect, discuss and celebrate cinema.</p>
-
-        <div class="ticket-card">
-          <div>
-            <small>TICKETS FROM</small>
-            <strong id="ticketPrice">₹199</strong>
-          </div>
-          <div class="availability">
-            <div><span id="ticketsLeft">100</span> seats left</div>
-            <div class="bar"><i id="barFill"></i></div>
-          </div>
-          <button class="btn btn-primary" onclick="openBooking()">GET TICKETS</button>
-        </div>
-
-        <div class="waitlist-note">
-          Sold out? Join the waiting list and we'll contact you if a seat opens up.
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div class="modal" id="bookingModal" aria-hidden="true">
-    <div class="modal-backdrop" onclick="closeBooking()"></div>
-    <div class="modal-card">
-      <button class="close" onclick="closeBooking()" aria-label="Close">×</button>
-      <p class="eyebrow">RESERVE YOUR SEAT</p>
-      <h2>Book tickets</h2>
-      <form id="bookingForm">
-        <label>Full name<input required id="name" placeholder="Your name"></label>
-        <label>Mobile number<input required id="phone" type="tel" placeholder="+91 98765 43210"></label>
-        <label>Email<input required id="email" type="email" placeholder="you@example.com"></label>
-        <label>Tickets
-          <select id="quantity">
-            <option value="1">1 ticket</option><option value="2">2 tickets</option>
-            <option value="3">3 tickets</option><option value="4">4 tickets</option>
-            <option value="5">5 tickets</option>
-          </select>
-        </label>
-        <button class="btn btn-primary full" type="submit">CONFIRM BOOKING</button>
-      </form>
-      <p class="fine">This demo confirms the booking in your browser. Connect a database/payment/email provider for production use.</p>
-    </div>
-  </div>
-
-  <div class="modal" id="ticketModal" aria-hidden="true">
-    <div class="modal-backdrop" onclick="closeTicket()"></div>
-    <div class="modal-card ticket">
-      <button class="close" onclick="closeTicket()" aria-label="Close">×</button>
-      <p class="eyebrow">BOOKING CONFIRMED</p>
-      <h2>Your ticket</h2>
-      <div class="ticket-code" id="ticketCode">TFC-000000</div>
-      <div class="ticket-info">
-        <b id="ticketName">Guest</b>
-        <span id="ticketMovie">Movie Screening</span>
-        <span id="ticketDate">Saturday, 18 October 2026 · 6:30 PM</span>
-        <span id="ticketVenue">Venue to be announced</span>
-        <span id="ticketQty">1 ticket</span>
-      </div>
-      <div class="qr-placeholder" id="qrBox">QR</div>
-      <p class="fine">Show this ticket at the entrance. A production version will use a secure, server-validated QR code.</p>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<div class="modal" id="bookingModal"><div class="backdrop" onclick="closeModals()"></div><div class="modal-card"><button class="close" onclick="closeModals()">×</button><span class="kicker">RESERVE YOUR SEAT</span><h3 id="bookingModalTitle">Book tickets</h3><form id="bookingForm"><label>Full name<input id="bookingName" required></label><label>Mobile number<input id="bookingPhone" required></label><label>Email<input id="bookingEmail" type="email" required></label><label>Tickets<select id="bookingQty"></select></label><div class="summary"><span>Total</span><strong id="bookingTotal"></strong></div><button class="btn primary" type="submit">CONFIRM BOOKING</button></form><p class="note">Demo mode: bookings are stored only in this browser until a backend is connected.</p></div></div>
+<div class="modal" id="waitlistModal"><div class="backdrop" onclick="closeModals()"></div><div class="modal-card"><button class="close" onclick="closeModals()">×</button><span class="kicker">WAITING LIST</span><h3>Join the list</h3><form id="waitlistForm"><label>Full name<input id="waitName" required></label><label>Mobile number<input id="waitPhone" required></label><label>Email<input id="waitEmail" type="email" required></label><button class="btn primary">JOIN WAITLIST</button></form></div></div>
+<div class="modal" id="ticketModal"><div class="backdrop" onclick="closeModals()"></div><div class="modal-card ticket"><button class="close" onclick="closeModals()">×</button><span class="success">BOOKING CONFIRMED</span><h3 id="ticketEventTitle"></h3><div class="ticket-code" id="ticketCode"></div><p><span>Guest</span><strong id="ticketGuest"></strong></p><p><span>Date</span><strong id="ticketDate"></strong></p><p><span>Time</span><strong id="ticketTime"></strong></p><p><span>Venue</span><strong id="ticketVenue"></strong></p><p><span>Tickets</span><strong id="ticketQty"></strong></p><div class="fake-qr"></div></div></div>
+<script src="app.js"></script>
+</body></html>
