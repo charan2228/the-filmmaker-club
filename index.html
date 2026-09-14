@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -10,7 +12,7 @@
 
   <meta
     name="description"
-    content="The Filmmaker Club — Mirchi special screening."
+    content="The Filmmaker Club — Mirchi Screening"
   >
 
   <title>
@@ -21,123 +23,147 @@
     rel="stylesheet"
     href="style.css"
   >
+
 </head>
 
-<body>
 
-  <!-- =========================================
+<body class="public-page">
+
+
+  <!-- =====================================================
        HEADER
-  ========================================== -->
+  ====================================================== -->
 
   <header class="site-header">
 
-    <div class="nav-inner">
+    <div>
 
       <a
         href="#"
-        class="brand"
+        class="logo"
       >
-        <span class="brand-mark">
-          TFC
-        </span>
-
-        <span class="brand-name">
-          THE FILMMAKER CLUB
-        </span>
+        THE FILMMAKER CLUB
       </a>
 
-      <nav class="main-nav">
-
-        <a href="#screening">
-          SCREENING
-        </a>
-
-        <a href="#about">
-          ABOUT
-        </a>
-
-        <a
-          href="#"
-          class="book-now"
-          data-booking
-        >
-          BOOK
-        </a>
-
-      </nav>
-
     </div>
+
+
+    <nav>
+
+      <a href="#screening">
+        SCREENING
+      </a>
+
+      <a href="#about">
+        ABOUT
+      </a>
+
+      <a
+        href="#"
+        class="book-now"
+        data-booking
+      >
+        BOOK
+      </a>
+
+    </nav>
 
   </header>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        HERO
-  ========================================== -->
+  ====================================================== -->
 
   <main>
+
 
     <section
       class="hero"
       id="heroSection"
-      data-hero
     >
 
-      <div class="hero-overlay"></div>
+      <div class="shade"></div>
 
-      <div class="hero-content">
 
-        <p class="hero-kicker">
+      <div class="hero-copy">
+
+        <div class="kicker">
           THE FILMMAKER CLUB
-        </p>
+        </div>
 
-        <h1
-          class="hero-title"
-          id="heroMovie"
-        >
-          MIRCHI
+
+        <h1>
+
+          <span id="heroMovie">
+            MIRCHI
+          </span>
+
         </h1>
 
-        <p class="hero-subtitle">
+
+        <p>
+
           A special movie screening experience.
+
         </p>
 
-        <div class="hero-meta">
 
-          <span class="hero-date">
-            16 SEPTEMBER 2026
-          </span>
+        <div class="actions">
 
-          <span class="hero-divider">
-            •
-          </span>
+          <button
+            type="button"
+            class="btn primary book-now"
+            data-booking
+          >
+            RESERVE YOUR SEAT
+          </button>
 
-          <span class="hero-venue">
-            PURNA HALL
-          </span>
+
+          <a
+            href="#screening"
+            class="btn ghost"
+          >
+            VIEW DETAILS
+          </a>
 
         </div>
 
-        <button
-          type="button"
-          class="book-now hero-button"
-          data-booking
-        >
-          RESERVE YOUR SEAT
-        </button>
+      </div>
+
+
+      <div class="hero-meta">
+
+        <span class="hero-date">
+          16 SEPTEMBER 2026
+        </span>
+
+        <span class="hero-venue">
+          PURNA HALL
+        </span>
+
+        <span class="hero-time">
+          12:00 PM
+        </span>
 
       </div>
 
     </section>
 
 
-    <!-- =========================================
+
+    <!-- =====================================================
          MARQUEE
-    ========================================== -->
+    ====================================================== -->
 
-    <section class="marquee-section">
+    <section class="marquee">
 
-      <div class="marquee-track">
+      <div class="track">
+
+        <span class="marquee-text">
+          THE FILMMAKER CLUB • MIRCHI • SPECIAL SCREENING
+        </span>
 
         <span class="marquee-text">
           THE FILMMAKER CLUB • MIRCHI • SPECIAL SCREENING
@@ -152,356 +178,406 @@
     </section>
 
 
-    <!-- =========================================
-         SCREENING DETAILS
-    ========================================== -->
+
+    <!-- =====================================================
+         SCREENING
+    ====================================================== -->
 
     <section
-      class="screening-section"
+      class="screening"
       id="screening"
     >
 
-      <div class="screening-container">
 
+      <!-- POSTER -->
 
-        <!-- POSTER -->
+      <div>
 
-        <div class="poster-column">
+        <div class="poster">
 
-          <div class="poster-frame">
-
-            <img
-              id="posterImage"
-              class="poster-image"
-              data-poster
-              src="./mirchi-poster.png"
-              alt="Mirchi screening poster"
-            >
-
-          </div>
-
-        </div>
-
-
-        <!-- DETAILS -->
-
-        <div class="details-column">
-
-          <p class="event-eyebrow">
-            THE FILMMAKER CLUB PRESENTS
-          </p>
-
-          <h2
-            class="event-title"
-            id="movieTitle"
+          <img
+            id="posterImage"
+            src="./mirchi-poster.png"
+            alt="Mirchi screening poster"
           >
-            MIRCHI
-          </h2>
 
 
-          <div class="event-info">
+          <div class="poster-fallback">
 
+            <span class="kicker">
+              SPECIAL SCREENING
+            </span>
 
-            <div class="info-item">
+            <strong>
+              MIRCHI
+            </strong>
 
-              <span class="info-label">
-                DATE
-              </span>
-
-              <span
-                class="event-date"
-                id="eventDate"
-              >
-                16 September 2026
-              </span>
-
-            </div>
-
-
-            <div class="info-item">
-
-              <span class="info-label">
-                TIME
-              </span>
-
-              <span
-                class="event-time"
-                id="eventTime"
-              >
-                12:00 PM
-              </span>
-
-            </div>
-
-
-            <div class="info-item">
-
-              <span class="info-label">
-                VENUE
-              </span>
-
-              <span
-                class="event-venue"
-                id="eventVenue"
-              >
-                Purna Hall
-              </span>
-
-            </div>
-
-
-            <div class="info-item">
-
-              <span class="info-label">
-                TICKETS
-              </span>
-
-              <span
-                class="ticket-price"
-                id="ticketPrice"
-              >
-                FREE
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <p
-            class="event-description"
-            id="eventDescription"
-          >
-            Join The Filmmaker Club for a special
-            screening of Mirchi.
-          </p>
-
-
-          <!-- AVAILABILITY -->
-
-          <div class="availability-box">
-
-            <span class="availability">
-
-              <strong id="ticketsLeft">
-                130
-              </strong>
-
-              SEATS AVAILABLE
-
+            <span>
+              THE FILMMAKER CLUB
             </span>
 
           </div>
 
+        </div>
 
-          <div class="stock-bar">
 
-            <div
-              class="stock-fill"
-              id="stockFill"
-            ></div>
+        <div class="poster-caption">
+
+          <span>
+            MIRCHI
+          </span>
+
+          <span>
+            2013
+          </span>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- EVENT INFORMATION -->
+
+      <div class="event-copy">
+
+        <div class="eyebrow">
+          THE FILMMAKER CLUB PRESENTS
+        </div>
+
+
+        <h2 id="movieTitle">
+          MIRCHI
+        </h2>
+
+
+        <p
+          class="lead"
+          id="eventDescription"
+        >
+          Join The Filmmaker Club for a special
+          screening of Mirchi.
+        </p>
+
+
+
+        <!-- DETAILS -->
+
+        <div class="details">
+
+
+          <div>
+
+            <span>
+              DATE
+            </span>
+
+            <strong id="eventDate">
+              16 September 2026
+            </strong>
 
           </div>
 
 
-          <button
-            type="button"
-            class="book-now primary-button"
-            data-booking
-          >
-            BOOK YOUR TICKETS
-          </button>
+          <div>
+
+            <span>
+              TIME
+            </span>
+
+            <strong id="eventTime">
+              12:00 PM
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              VENUE
+            </span>
+
+            <strong id="eventVenue">
+              Purna Hall
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              TICKETS
+            </span>
+
+            <strong id="ticketPrice">
+              FREE
+            </strong>
+
+          </div>
+
 
         </div>
 
-      </div>
-
-    </section>
 
 
-    <!-- =========================================
-         ABOUT
-    ========================================== -->
+        <!-- TICKET / AVAILABILITY -->
 
-    <section
-      class="about-section"
-      id="about"
-    >
+        <div class="ticket-panel">
 
-      <div class="about-container">
 
-        <div class="about-heading">
+          <div>
 
-          <p class="section-kicker">
-            ABOUT
-          </p>
+            <span>
+              PRICE
+            </span>
 
-          <h2 class="about-title">
-            THE FILMMAKER CLUB
-          </h2>
+            <strong class="ticket-price">
+              FREE
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <div class="stock-row">
+
+              <span>
+                AVAILABILITY
+              </span>
+
+              <span>
+
+                <strong id="ticketsLeft">
+                  130
+                </strong>
+
+                / 130
+
+              </span>
+
+            </div>
+
+
+            <div class="bar">
+
+              <i
+                id="barFill"
+                style="width:0%"
+              ></i>
+
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <button
+              type="button"
+              class="btn primary book-now"
+              data-booking
+            >
+              BOOK
+            </button>
+
+          </div>
+
 
         </div>
 
-
-        <div class="about-copy">
-
-          <p class="about-text">
-            A community built around cinema,
-            storytelling and unforgettable
-            screening experiences.
-          </p>
-
-          <p class="about-signature">
-            THE FILMMAKER CLUB
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         CALL TO ACTION
-    ========================================== -->
-
-    <section class="cta-section">
-
-      <div class="cta-content">
-
-        <p class="cta-kicker">
-          RESERVE YOUR SEAT
-        </p>
-
-        <h2 class="cta-title">
-          SEE YOU AT THE SCREENING.
-        </h2>
 
         <button
           type="button"
-          class="book-now cta-button"
-          data-booking
+          class="text-btn"
+          onclick="openWaitlist()"
         >
-          BOOK NOW
+          JOIN WAITLIST
         </button>
+
 
       </div>
 
     </section>
+
+
+
+    <!-- =====================================================
+         ABOUT
+    ====================================================== -->
+
+    <section
+      class="about"
+      id="about"
+    >
+
+
+      <div>
+
+        <div class="section-no">
+          01 / ABOUT
+        </div>
+
+
+        <h3>
+          THE FILMMAKER CLUB
+        </h3>
+
+      </div>
+
+
+      <div>
+
+        <p>
+
+          A community built around cinema,
+          storytelling and unforgettable
+          screening experiences.
+
+        </p>
+
+
+        <p class="signature">
+          THE FILMMAKER CLUB
+        </p>
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CTA
+    ====================================================== -->
+
+    <section class="cta">
+
+      <div class="mini">
+        RESERVE YOUR SEAT
+      </div>
+
+
+      <h3>
+        SEE YOU AT THE SCREENING.
+      </h3>
+
+
+      <button
+        type="button"
+        class="btn light book-now"
+        data-booking
+      >
+        BOOK NOW
+      </button>
+
+    </section>
+
 
   </main>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        BOOKING MODAL
-  ========================================== -->
+  ====================================================== -->
 
   <div
     class="modal"
     id="bookingModal"
-    aria-hidden="true"
   >
 
-    <div class="modal-content">
+    <div class="backdrop"></div>
+
+
+    <div class="modal-card">
+
 
       <button
         type="button"
-        class="modal-close"
-        data-close-booking
-        aria-label="Close booking"
+        class="close"
+        onclick="closeBooking()"
+        aria-label="Close"
       >
         ×
       </button>
 
 
-      <div class="modal-header">
-
-        <p class="section-kicker">
-          THE FILMMAKER CLUB
-        </p>
-
-        <h2>
-          RESERVE YOUR SEAT
-        </h2>
-
-        <p>
-          MIRCHI • 16 SEPTEMBER 2026
-        </p>
-
+      <div class="kicker">
+        THE FILMMAKER CLUB
       </div>
+
+
+      <h3>
+        RESERVE YOUR SEAT
+      </h3>
+
+
+      <p>
+        MIRCHI • 16 SEPTEMBER 2026
+      </p>
+
 
 
       <form
         id="bookingForm"
-        class="booking-form"
       >
 
 
-        <!-- NAME -->
+        <label>
 
-        <div class="form-group">
-
-          <label for="bookingName">
-            NAME
-          </label>
+          FULL NAME
 
           <input
             type="text"
             id="bookingName"
             name="name"
-            placeholder="Your full name"
+            placeholder="Enter your full name"
             required
           >
 
-        </div>
+        </label>
 
 
-        <!-- PHONE -->
 
-        <div class="form-group">
+        <label>
 
-          <label for="bookingPhone">
-            PHONE
-          </label>
+          PHONE NUMBER
 
           <input
             type="tel"
             id="bookingPhone"
             name="phone"
-            placeholder="Your phone number"
+            placeholder="Enter your phone number"
             required
           >
 
-        </div>
+        </label>
 
 
-        <!-- EMAIL -->
 
-        <div class="form-group">
+        <label>
 
-          <label for="bookingEmail">
-            EMAIL
-          </label>
+          EMAIL
 
           <input
             type="email"
             id="bookingEmail"
             name="email"
-            placeholder="Your email address"
+            placeholder="Enter your email"
             required
           >
 
-        </div>
+        </label>
 
 
-        <!-- QUANTITY -->
 
-        <div class="form-group">
+        <label>
 
-          <label for="bookingQty">
-            NUMBER OF TICKETS
-          </label>
+          NUMBER OF TICKETS
 
           <select
             id="bookingQty"
@@ -518,60 +594,39 @@
 
           </select>
 
-        </div>
+        </label>
 
 
-        <!-- SUMMARY -->
 
-        <div class="booking-summary">
+        <div class="summary">
 
-          <div>
+          <span>
+            TOTAL
+          </span>
 
-            <span>
-              EVENT
-            </span>
-
-            <strong id="posterMovie">
-              MIRCHI
-            </strong>
-
-          </div>
-
-
-          <div>
-
-            <span>
-              DATE
-            </span>
-
-            <strong>
-              16 SEP 2026
-            </strong>
-
-          </div>
-
-
-          <div>
-
-            <span>
-              PRICE
-            </span>
-
-            <strong class="ticket-price">
-              FREE
-            </strong>
-
-          </div>
+          <strong class="ticket-price">
+            FREE
+          </strong>
 
         </div>
+
+
+
+        <p class="note">
+
+          Maximum 2 tickets per booking.
+
+        </p>
+
 
 
         <button
           type="submit"
-          class="submit-booking"
+          class="btn primary"
         >
           CONFIRM BOOKING
         </button>
+
 
       </form>
 
@@ -580,185 +635,238 @@
   </div>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        TICKET MODAL
-  ========================================== -->
+  ====================================================== -->
 
   <div
     class="modal"
     id="ticketModal"
   >
 
-    <div class="modal-content ticket-content">
+    <div class="backdrop"></div>
+
+
+    <div class="modal-card">
+
 
       <button
         type="button"
-        class="modal-close"
+        class="close"
         onclick="closeTicket()"
       >
         ×
       </button>
 
 
-      <p class="section-kicker">
-        THE FILMMAKER CLUB
-      </p>
-
-      <h2>
-        BOOKING RECEIVED
-      </h2>
+      <div class="kicker">
+        BOOKING CONFIRMED
+      </div>
 
 
-      <div class="ticket-card">
+      <h3>
+        YOUR TICKET
+      </h3>
+
+
+      <div class="ticket">
+
 
         <p>
-          BOOKING CODE
+
+          <span>
+            NAME
+          </span>
+
+          <strong id="ticketName">
+            —
+          </strong>
+
         </p>
 
-        <h3 id="ticketCode">
-          TFC-XXXXXX
-        </h3>
+
+        <p>
+
+          <span>
+            MOVIE
+          </span>
+
+          <strong id="ticketMovie">
+            MIRCHI
+          </strong>
+
+        </p>
 
 
-        <div class="ticket-details">
+        <p>
 
-          <div>
-            <span>
-              NAME
-            </span>
+          <span>
+            DATE
+          </span>
 
-            <strong id="ticketName">
-              —
-            </strong>
-          </div>
+          <strong id="ticketDate">
+            16 September 2026
+          </strong>
 
-
-          <div>
-            <span>
-              MOVIE
-            </span>
-
-            <strong id="ticketMovie">
-              MIRCHI
-            </strong>
-          </div>
+        </p>
 
 
-          <div>
-            <span>
-              DATE
-            </span>
+        <p>
 
-            <strong id="ticketDate">
-              16 September 2026
-            </strong>
-          </div>
+          <span>
+            TIME
+          </span>
 
+          <strong id="ticketTime">
+            12:00 PM
+          </strong>
 
-          <div>
-            <span>
-              TIME
-            </span>
-
-            <strong id="ticketTime">
-              12:00 PM
-            </strong>
-          </div>
+        </p>
 
 
-          <div>
-            <span>
-              VENUE
-            </span>
+        <p>
 
-            <strong id="ticketVenue">
-              Purna Hall
-            </strong>
-          </div>
+          <span>
+            VENUE
+          </span>
+
+          <strong id="ticketVenue">
+            Purna Hall
+          </strong>
+
+        </p>
 
 
-          <div>
-            <span>
-              TICKETS
-            </span>
+        <p>
 
-            <strong id="ticketQty">
-              1 ticket
-            </strong>
-          </div>
+          <span>
+            TICKETS
+          </span>
 
-        </div>
+          <strong id="ticketQty">
+            1 ticket
+          </strong>
+
+        </p>
+
 
       </div>
+
+
+      <div class="fake-qr"></div>
+
+
+      <p class="ticket-code">
+
+        <span id="ticketCode">
+          TFC-XXXXXX
+        </span>
+
+      </p>
+
+
+      <p class="note">
+
+        Please keep this booking code
+        for your records.
+
+      </p>
+
 
     </div>
 
   </div>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        WAITLIST MODAL
-  ========================================== -->
+  ====================================================== -->
 
   <div
     class="modal"
     id="waitlistModal"
   >
 
-    <div class="modal-content">
+    <div class="backdrop"></div>
+
+
+    <div class="modal-card">
+
 
       <button
         type="button"
-        class="modal-close"
+        class="close"
         onclick="closeModals()"
       >
         ×
       </button>
 
-      <p class="section-kicker">
-        WAITLIST
-      </p>
 
-      <h2>
+      <div class="kicker">
+        WAITLIST
+      </div>
+
+
+      <h3>
         JOIN THE WAITLIST
-      </h2>
+      </h3>
+
 
       <p>
-        If seats become available,
-        we'll let you know.
+        Seats are currently limited.
+        Join the waitlist and we'll let
+        you know if a seat becomes available.
       </p>
+
+
+      <button
+        type="button"
+        class="btn primary"
+        onclick="closeModals()"
+      >
+        CLOSE
+      </button>
+
 
     </div>
 
   </div>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        FOOTER
-  ========================================== -->
+  ====================================================== -->
 
-  <footer class="site-footer">
+  <footer>
 
-    <div class="footer-inner">
+    <div class="footer-text">
+      The Filmmaker Club
+    </div>
 
-      <p class="footer-text">
-        The Filmmaker Club
-      </p>
 
-      <p class="footer-social">
-        @thefilmmakerclub
-      </p>
+    <div>
+      MIRCHI • 16 SEPTEMBER 2026
+    </div>
 
+
+    <div class="footer-social">
+      @thefilmmakerclub
     </div>
 
   </footer>
 
 
-  <!-- =========================================
+
+  <!-- =====================================================
        JAVASCRIPT
-  ========================================== -->
+       KEEP JAVASCRIPT IN app.js
+  ====================================================== -->
 
   <script src="app.js"></script>
 
 </body>
+
 </html>
