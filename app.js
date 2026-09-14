@@ -1,53 +1,909 @@
-const eventConfig = {
-  movie: "MOVIE SCREENING",
-  date: "Saturday, 18 October 2026",
-  time: "6:30 PM",
-  venue: "Venue to be announced",
-  description: "Join The Filmmaker Club for a special movie screening followed by a space to connect, discuss and celebrate cinema.",
-  price: 199,
-  capacity: 100
+/* =========================================================
+   THE FILMMAKER CLUB
+   Supabase-connected frontend
+   ========================================================= */
+
+const SUPABASE_URL =
+  "https://kzkxybzobqepuncprkds.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_tcZ7tjwLulDTyk8BWmRhLA_hUMMghoq";
+
+const CONFIG_KEY = "tfc_config_v4";
+const LOCAL_SOLD_KEY = "tfc_local_sold_v4";
+const LOCAL_BOOKINGS_KEY = "tfc_local_bookings_v4";
+
+
+/* =========================================================
+   DEFAULT EVENT
+   ========================================================= */
+
+const defaults = {
+  movieTitle: "Mirchi",
+  eventDate: "16 September 2026",
+  eventTime: "12:00 PM",
+  eventVenue: "Purna Hall",
+
+  eventDescription:
+    "Join The Filmmaker Club for a special screening of Mirchi.",
+
+  ticketPrice: 0,
+  ticketCapacity: 130,
+  maxPerBooking: 2,
+  waitlistLimit: 25
 };
 
-let sold = Number(localStorage.getItem("tfc_sold") || 0);
 
-function refresh(){
-  const left = Math.max(0, eventConfig.capacity - sold);
-  document.querySelector("#heroMovie").innerHTML = eventConfig.movie.replace(" ", "<br>") + (eventConfig.movie.includes(" ") ? "" : "");
-  document.querySelector("#posterMovie").innerHTML = eventConfig.movie.split(" ").slice(0,3).join(" ") + "<br>POSTER";
-  document.querySelector("#movieTitle").textContent = eventConfig.movie;
-  document.querySelector("#eventDate").textContent = eventConfig.date;
-  document.querySelector("#eventTime").textContent = eventConfig.time;
-  document.querySelector("#eventVenue").textContent = eventConfig.venue;
-  document.querySelector("#eventDescription").textContent = eventConfig.description;
-  document.querySelector("#ticketPrice").textContent = "₹" + eventConfig.price;
-  document.querySelector("#ticketsLeft").textContent = left;
-  document.querySelector("#barFill").style.width = ((left / eventConfig.capacity) * 100) + "%";
+let config = { ...defaults };
+let activeEvent = null;
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function $(selector) {
+  return document.querySelector(selector);
 }
-function openBooking(){ document.querySelector("#bookingModal").classList.add("open"); }
-function closeBooking(){ document.querySelector("#bookingModal").classList.remove("open"); }
-function closeTicket(){ document.querySelector("#ticketModal").classList.remove("open"); }
 
-document.querySelector("#bookingForm").addEventListener("submit", e => {
-  e.preventDefault();
-  const qty = Number(document.querySelector("#quantity").value);
-  const left = eventConfig.capacity - sold;
-  if(qty > left){ alert("Not enough seats remaining."); return; }
 
-  sold += qty;
-  localStorage.setItem("tfc_sold", sold);
+function setText(selector, value) {
+  const element = $(selector);
 
-  const code = "TFC-" + Math.floor(100000 + Math.random() * 900000);
-  document.querySelector("#ticketCode").textContent = code;
-  document.querySelector("#ticketName").textContent = document.querySelector("#name").value;
-  document.querySelector("#ticketMovie").textContent = eventConfig.movie;
-  document.querySelector("#ticketDate").textContent = eventConfig.date + " · " + eventConfig.time;
-  document.querySelector("#ticketVenue").textContent = eventConfig.venue;
-  document.querySelector("#ticketQty").textContent = qty + (qty === 1 ? " ticket" : " tickets");
+  if (element) {
+    element.textContent = value ?? "";
+  }
+}
 
-  closeBooking();
-  document.querySelector("#ticketModal").classList.add("open");
-  refresh();
-  e.target.reset();
-});
 
-refresh();
+function getLocalSold() {
+  return Number(
+    localStorage.getItem(LOCAL_SOLD_KEY) || 0
+  );
+}
+
+
+function saveLocalSold(value) {
+  localStorage.setItem(
+    LOCAL_SOLD_KEY,
+    String(value)
+  );
+}
+
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+function supabaseHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_PUBLISHABLE_KEY,
+    Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+    "Content-Type": "application/json",
+    ...extra
+  };
+}
+
+
+async function supabaseFetch(path, options = {}) {
+
+  const response = await fetch(
+    `${SUPABASE_URL}${path}`,
+    {
+      ...options,
+
+      headers: supabaseHeaders(
+        options.headers || {}
+      )
+    }
+  );
+
+
+  if (!response.ok) {
+
+    const body = await response.text();
+
+    throw new Error(
+      `Supabase ${response.status}: ${body}`
+    );
+  }
+
+
+  const text = await response.text();
+
+  return text ? JSON.parse(text) : null;
+}
+
+
+/* =========================================================
+   LOAD EVENT FROM SUPABASE
+   ========================================================= */
+
+async function loadEvent() {
+
+  try {
+
+    const rows = await supabaseFetch(
+      "/rest/v1/events" +
+      "?select=*" +
+      "&is_active=eq.true" +
+      "&limit=1"
+    );
+
+
+    if (rows && rows[0]) {
+
+      activeEvent = rows[0];
+
+
+      config = {
+
+        ...defaults,
+
+        movieTitle:
+          activeEvent.movie_title ||
+          defaults.movieTitle,
+
+        eventDate:
+          activeEvent.event_date ||
+          defaults.eventDate,
+
+        eventTime:
+          activeEvent.event_time ||
+          defaults.eventTime,
+
+        eventVenue:
+          activeEvent.event_venue ||
+          defaults.eventVenue,
+
+        eventDescription:
+          activeEvent.event_description ||
+          defaults.eventDescription,
+
+        ticketPrice:
+          Number(
+            activeEvent.ticket_price ?? 0
+          ),
+
+        ticketCapacity:
+          Number(
+            activeEvent.ticket_capacity ??
+            defaults.ticketCapacity
+          ),
+
+        maxPerBooking:
+          Number(
+            activeEvent.max_per_booking ??
+            defaults.maxPerBooking
+          ),
+
+        waitlistLimit:
+          Number(
+            activeEvent.waitlist_limit ??
+            defaults.waitlistLimit
+          )
+      };
+
+
+      localStorage.setItem(
+        CONFIG_KEY,
+        JSON.stringify(config)
+      );
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Could not load Supabase event:",
+      error
+    );
+
+
+    const saved =
+      localStorage.getItem(CONFIG_KEY);
+
+
+    if (saved) {
+
+      try {
+
+        config = {
+          ...defaults,
+          ...JSON.parse(saved)
+        };
+
+      } catch (_) {
+
+        config = {
+          ...defaults
+        };
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   RENDER EVENT
+   ========================================================= */
+
+function renderEvent() {
+
+  setText(
+    "#heroMovie",
+    config.movieTitle
+  );
+
+
+  setText(
+    "#posterMovie",
+    config.movieTitle
+  );
+
+
+  setText(
+    "#movieTitle",
+    config.movieTitle
+  );
+
+
+  setText(
+    "#eventDate",
+    config.eventDate
+  );
+
+
+  setText(
+    "#eventTime",
+    config.eventTime
+  );
+
+
+  setText(
+    "#eventVenue",
+    config.eventVenue
+  );
+
+
+  setText(
+    "#eventDescription",
+    config.eventDescription
+  );
+
+
+  const price =
+    Number(config.ticketPrice);
+
+
+  setText(
+    "#ticketPrice",
+    price === 0
+      ? "FREE"
+      : `₹${price}`
+  );
+
+
+  setText(
+    "#ticketsLeft",
+    Math.max(
+      0,
+      config.ticketCapacity -
+      getLocalSold()
+    )
+  );
+
+
+  const quantity =
+    $("#quantity") ||
+    $("#bookingQty");
+
+
+  if (quantity) {
+
+    quantity.innerHTML = "";
+
+
+    for (
+      let i = 1;
+      i <= config.maxPerBooking;
+      i++
+    ) {
+
+      const option =
+        document.createElement("option");
+
+
+      option.value = String(i);
+
+
+      option.textContent =
+        `${i} ${
+          i === 1
+            ? "ticket"
+            : "tickets"
+        }`;
+
+
+      quantity.appendChild(option);
+    }
+  }
+
+
+  refreshAvailability();
+}
+
+
+/* =========================================================
+   AVAILABILITY
+   ========================================================= */
+
+async function refreshAvailability() {
+
+  let sold = getLocalSold();
+
+
+  try {
+
+    if (activeEvent) {
+
+      const rows =
+        await supabaseFetch(
+          `/rest/v1/bookings` +
+          `?select=quantity` +
+          `&event_id=eq.${encodeURIComponent(
+            activeEvent.id
+          )}` +
+          `&status=eq.confirmed`
+        );
+
+
+      if (Array.isArray(rows)) {
+
+        sold =
+          rows.reduce(
+            (total, row) =>
+              total +
+              Number(
+                row.quantity || 0
+              ),
+            0
+          );
+      }
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Availability fallback:",
+      error
+    );
+  }
+
+
+  const left =
+    Math.max(
+      0,
+      config.ticketCapacity - sold
+    );
+
+
+  setText(
+    "#ticketsLeft",
+    left
+  );
+
+
+  setText(
+    "#adminSold",
+    sold
+  );
+
+
+  setText(
+    "#adminRemaining",
+    left
+  );
+
+
+  const percentage =
+    config.ticketCapacity
+      ? Math.min(
+          100,
+          (sold /
+            config.ticketCapacity) *
+            100
+        )
+      : 0;
+
+
+  const bar =
+    $("#barFill");
+
+
+  if (bar) {
+
+    bar.style.width =
+      `${percentage}%`;
+  }
+
+
+  const stockFill =
+    $("#stockFill");
+
+
+  if (stockFill) {
+
+    stockFill.style.width =
+      `${percentage}%`;
+  }
+}
+
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+function openBooking() {
+
+  refreshAvailability();
+
+
+  const modal =
+    $("#bookingModal");
+
+
+  if (modal) {
+
+    modal.classList.add("open");
+    modal.classList.add("show");
+  }
+}
+
+
+function closeBooking() {
+
+  const modal =
+    $("#bookingModal");
+
+
+  if (modal) {
+
+    modal.classList.remove("open");
+    modal.classList.remove("show");
+  }
+}
+
+
+function closeTicket() {
+
+  const modal =
+    $("#ticketModal");
+
+
+  if (modal) {
+
+    modal.classList.remove("open");
+    modal.classList.remove("show");
+  }
+}
+
+
+function closeModals() {
+
+  document
+    .querySelectorAll(".modal")
+    .forEach(
+      modal => {
+
+        modal.classList.remove(
+          "open",
+          "show"
+        );
+      }
+    );
+}
+
+
+function openWaitlist() {
+
+  const modal =
+    $("#waitlistModal");
+
+
+  if (modal) {
+
+    modal.classList.add("open");
+    modal.classList.add("show");
+  }
+}
+
+
+window.openBooking =
+  openBooking;
+
+window.closeBooking =
+  closeBooking;
+
+window.closeTicket =
+  closeTicket;
+
+window.closeModals =
+  closeModals;
+
+window.openWaitlist =
+  openWaitlist;
+
+
+/* =========================================================
+   CREATE BOOKING
+   ========================================================= */
+
+async function createBooking(customer) {
+
+  if (!activeEvent) {
+
+    throw new Error(
+      "No active event is configured."
+    );
+  }
+
+
+  const bookingCode =
+    "TFC-" +
+    Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase();
+
+
+  const payload = {
+
+    event_id:
+      activeEvent.id,
+
+    booking_code:
+      bookingCode,
+
+    customer_name:
+      customer.name,
+
+    customer_phone:
+      customer.phone,
+
+    customer_email:
+      customer.email,
+
+    quantity:
+      customer.quantity,
+
+    status:
+      "pending"
+  };
+
+
+  const result =
+    await supabaseFetch(
+      "/rest/v1/bookings",
+      {
+
+        method: "POST",
+
+        headers: {
+          Prefer:
+            "return=representation"
+        },
+
+        body:
+          JSON.stringify(payload)
+      }
+    );
+
+
+  return (
+    result?.[0] ||
+    {
+      ...payload,
+      id: null
+    }
+  );
+}
+
+
+/* =========================================================
+   BOOKING FORM
+   ========================================================= */
+
+const bookingForm =
+  $("#bookingForm");
+
+
+bookingForm?.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    const name =
+      $("#name")?.value?.trim() ||
+      $("#bookingName")?.value?.trim() ||
+      "";
+
+
+    const phone =
+      $("#phone")?.value?.trim() ||
+      $("#bookingPhone")?.value?.trim() ||
+      "";
+
+
+    const email =
+      $("#email")?.value?.trim() ||
+      $("#bookingEmail")?.value?.trim() ||
+      "";
+
+
+    const quantity =
+      Number(
+        $("#quantity")?.value ||
+        $("#bookingQty")?.value ||
+        1
+      );
+
+
+    if (
+      !name ||
+      !phone ||
+      !email
+    ) {
+
+      alert(
+        "Please enter your name, phone number and email."
+      );
+
+      return;
+    }
+
+
+    if (
+      quantity < 1 ||
+      quantity >
+        config.maxPerBooking
+    ) {
+
+      alert(
+        `You can book a maximum of ${config.maxPerBooking} tickets.`
+      );
+
+      return;
+    }
+
+
+    try {
+
+      const button =
+        bookingForm.querySelector(
+          "button[type='submit']"
+        );
+
+
+      if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+          "Booking...";
+      }
+
+
+      const ticket =
+        await createBooking({
+
+          name,
+          phone,
+          email,
+          quantity
+
+        });
+
+
+      const localBookings =
+        JSON.parse(
+          localStorage.getItem(
+            LOCAL_BOOKINGS_KEY
+          ) || "[]"
+        );
+
+
+      localBookings.push({
+
+        ...ticket,
+
+        customer_name:
+          name,
+
+        quantity,
+
+        created_at:
+          new Date().toISOString()
+      });
+
+
+      localStorage.setItem(
+        LOCAL_BOOKINGS_KEY,
+        JSON.stringify(
+          localBookings
+        )
+      );
+
+
+      saveLocalSold(
+        getLocalSold() +
+        quantity
+      );
+
+
+      setText(
+        "#ticketCode",
+        ticket.booking_code
+      );
+
+
+      setText(
+        "#ticketName",
+        name
+      );
+
+
+      setText(
+        "#ticketGuest",
+        name
+      );
+
+
+      setText(
+        "#ticketMovie",
+        config.movieTitle
+      );
+
+
+      setText(
+        "#ticketEventTitle",
+        config.movieTitle
+      );
+
+
+      setText(
+        "#ticketDate",
+        config.eventDate
+      );
+
+
+      setText(
+        "#ticketTime",
+        config.eventTime
+      );
+
+
+      setText(
+        "#ticketVenue",
+        config.eventVenue
+      );
+
+
+      setText(
+        "#ticketQty",
+        `${quantity} ${
+          quantity === 1
+            ? "ticket"
+            : "tickets"
+        }`
+      );
+
+
+      closeBooking();
+
+
+      const ticketModal =
+        $("#ticketModal");
+
+
+      if (ticketModal) {
+
+        ticketModal.classList.add(
+          "open"
+        );
+
+        ticketModal.classList.add(
+          "show"
+        );
+      }
+
+
+      bookingForm.reset();
+
+
+      await refreshAvailability();
+
+
+      alert(
+        "Booking received successfully. Your ticket is pending confirmation."
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      alert(
+        "We couldn't complete the booking right now. Please try again."
+      );
+
+
+    } finally {
+
+      const button =
+        bookingForm.querySelector(
+          "button[type='submit']"
+        );
+
+
+      if (button) {
+
+        button.disabled = false;
+
+        button.textContent =
+          "CONFIRM BOOKING";
+      }
+    }
+  }
+);
+
+
+/* =========================================================
+   FREE TICKET TOTAL
+   ========================================================= */
+
+const quantitySelector =
+  $("#quantity") ||
+  $("#bookingQty");
+
+
+quantitySelector?.addEventListener(
+  "change",
+  () => {
+
+    const quantity =
+      Number(
+        quantitySelector.value || 1
+      );
+
+
+    const total =
+      quantity *
+      Number(
+        config.ticketPrice || 0
+      );
+
+
+    setText(
+      "#bookingTotal",
+      total === 0
+        ? "FREE"
+        : `₹${total}`
+    );
+  }
+);
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+(async function init() {
+
+  await loadEvent();
+
+  renderEvent();
+
+})();
