@@ -1,966 +1,764 @@
-/* =========================================================
-   THE FILMMAKER CLUB — MIRCHI SCREENING
-   ========================================================= */
-
-const SUPABASE_URL =
-  "https://kzkxybzobqepuncprkds.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_tcZ7tjwLulDTyk8BWmRhLA_hUMMghoq";
-
-const POSTER_URL = "./mirchi-poster.png";
-
-const CONFIG_KEY = "tfc_config_v5";
-const LOCAL_SOLD_KEY = "tfc_local_sold_v5";
-const LOCAL_BOOKINGS_KEY = "tfc_local_bookings_v5";
-
-const defaults = {
-  movieTitle: "Mirchi",
-  eventDate: "16 September 2026",
-  eventTime: "12:00 PM",
-  eventVenue: "Purna Hall",
-  eventDescription:
-    "Join The Filmmaker Club for a special screening of Mirchi.",
-  ticketPrice: 0,
-  ticketCapacity: 130,
-  maxPerBooking: 2,
-  waitlistLimit: 25
-};
-
-let config = { ...defaults };
-let activeEvent = null;
-
-
-/* =========================================================
-   HELPERS
-   ========================================================= */
-
-function $(selector) {
-  return document.querySelector(selector);
-}
-
-function setText(selector, value) {
-  const element = $(selector);
-  if (element) element.textContent = value ?? "";
-}
-
-function getLocalSold() {
-  return Number(
-    localStorage.getItem(LOCAL_SOLD_KEY) || 0
-  );
-}
-
-function saveLocalSold(value) {
-  localStorage.setItem(
-    LOCAL_SOLD_KEY,
-    String(value)
-  );
-}
-
-
-/* =========================================================
-   SUPABASE
-   ========================================================= */
-
-function supabaseHeaders(extra = {}) {
-  return {
-    apikey: SUPABASE_PUBLISHABLE_KEY,
-    Authorization:
-      `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-    "Content-Type": "application/json",
-    ...extra
-  };
-}
-
-async function supabaseFetch(path, options = {}) {
-
-  const response = await fetch(
-    `${SUPABASE_URL}${path}`,
-    {
-      ...options,
-      headers: supabaseHeaders(
-        options.headers || {}
-      )
-    }
-  );
-
-  if (!response.ok) {
-    const body = await response.text();
-
-    throw new Error(
-      `Supabase ${response.status}: ${body}`
-    );
-  }
-
-  const text = await response.text();
-
-  return text
-    ? JSON.parse(text)
-    : null;
-}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
 
-/* =========================================================
-   LOAD EVENT
-   ========================================================= */
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-async function loadEvent() {
+  <meta
+    name="description"
+    content="The Filmmaker Club — Mirchi special screening."
+  >
 
-  try {
+  <title>
+    The Filmmaker Club — Mirchi Screening
+  </title>
 
-    const rows =
-      await supabaseFetch(
-        "/rest/v1/events" +
-        "?select=*" +
-        "&is_active=eq.true" +
-        "&limit=1"
-      );
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+</head>
 
-    if (rows && rows[0]) {
+<body>
 
-      activeEvent = rows[0];
+  <!-- =========================================
+       HEADER
+  ========================================== -->
 
-      config = {
+  <header class="site-header">
 
-        ...defaults,
+    <div class="nav-inner">
 
-        movieTitle:
-          activeEvent.movie_title ||
-          defaults.movieTitle,
+      <a
+        href="#"
+        class="brand"
+      >
+        <span class="brand-mark">
+          TFC
+        </span>
 
-        eventDate:
-          activeEvent.event_date ||
-          defaults.eventDate,
+        <span class="brand-name">
+          THE FILMMAKER CLUB
+        </span>
+      </a>
 
-        eventTime:
-          activeEvent.event_time ||
-          defaults.eventTime,
+      <nav class="main-nav">
 
-        eventVenue:
-          activeEvent.event_venue ||
-          defaults.eventVenue,
+        <a href="#screening">
+          SCREENING
+        </a>
 
-        eventDescription:
-          activeEvent.event_description ||
-          defaults.eventDescription,
+        <a href="#about">
+          ABOUT
+        </a>
 
-        ticketPrice:
-          Number(
-            activeEvent.ticket_price ?? 0
-          ),
+        <a
+          href="#"
+          class="book-now"
+          data-booking
+        >
+          BOOK
+        </a>
 
-        ticketCapacity:
-          Number(
-            activeEvent.ticket_capacity ??
-            defaults.ticketCapacity
-          ),
+      </nav>
 
-        maxPerBooking:
-          Number(
-            activeEvent.max_per_booking ??
-            defaults.maxPerBooking
-          ),
+    </div>
 
-        waitlistLimit:
-          Number(
-            activeEvent.waitlist_limit ??
-            defaults.waitlistLimit
-          )
-      };
+  </header>
 
-      localStorage.setItem(
-        CONFIG_KEY,
-        JSON.stringify(config)
-      );
-    }
 
-  } catch (error) {
+  <!-- =========================================
+       HERO
+  ========================================== -->
 
-    console.error(
-      "Supabase event loading failed:",
-      error
-    );
+  <main>
 
-    const saved =
-      localStorage.getItem(CONFIG_KEY);
+    <section
+      class="hero"
+      id="heroSection"
+      data-hero
+    >
 
-    if (saved) {
+      <div class="hero-overlay"></div>
 
-      try {
+      <div class="hero-content">
 
-        config = {
-          ...defaults,
-          ...JSON.parse(saved)
-        };
+        <p class="hero-kicker">
+          THE FILMMAKER CLUB
+        </p>
 
-      } catch (_) {
+        <h1
+          class="hero-title"
+          id="heroMovie"
+        >
+          MIRCHI
+        </h1>
 
-        config = {
-          ...defaults
-        };
-      }
-    }
-  }
-}
+        <p class="hero-subtitle">
+          A special movie screening experience.
+        </p>
 
+        <div class="hero-meta">
 
-/* =========================================================
-   POSTER
-   ========================================================= */
+          <span class="hero-date">
+            16 SEPTEMBER 2026
+          </span>
 
-function setupPoster() {
+          <span class="hero-divider">
+            •
+          </span>
 
-  /* Normal poster image */
+          <span class="hero-venue">
+            PURNA HALL
+          </span>
 
-  const posterImages =
-    document.querySelectorAll(
-      "#posterImage, .poster-image, [data-poster]"
-    );
+        </div>
 
-  posterImages.forEach(image => {
+        <button
+          type="button"
+          class="book-now hero-button"
+          data-booking
+        >
+          RESERVE YOUR SEAT
+        </button>
 
-    image.src = POSTER_URL;
+      </div>
 
-    image.style.display =
-      "block";
+    </section>
 
-    image.onerror = () => {
 
-      console.warn(
-        "Poster could not be loaded:",
-        POSTER_URL
-      );
-    };
-  });
+    <!-- =========================================
+         MARQUEE
+    ========================================== -->
 
+    <section class="marquee-section">
 
-  /* Hero background */
+      <div class="marquee-track">
 
-  const heroElements =
-    document.querySelectorAll(
-      "#heroSection, .hero, .hero-section, [data-hero]"
-    );
+        <span class="marquee-text">
+          THE FILMMAKER CLUB • MIRCHI • SPECIAL SCREENING
+        </span>
 
-  heroElements.forEach(hero => {
+        <span class="marquee-text">
+          THE FILMMAKER CLUB • MIRCHI • SPECIAL SCREENING
+        </span>
 
-    hero.style.backgroundImage =
-      `linear-gradient(
-        90deg,
-        rgba(0,0,0,.85),
-        rgba(0,0,0,.35),
-        rgba(0,0,0,.15)
-      ),
-      linear-gradient(
-        0deg,
-        rgba(0,0,0,.9),
-        transparent 60%
-      ),
-      url("${POSTER_URL}")`;
+      </div>
 
-    hero.style.backgroundSize =
-      "cover";
+    </section>
 
-    hero.style.backgroundPosition =
-      "center";
-  });
 
+    <!-- =========================================
+         SCREENING DETAILS
+    ========================================== -->
 
-  /* Generic poster elements */
+    <section
+      class="screening-section"
+      id="screening"
+    >
 
-  document
-    .querySelectorAll(
-      "[data-poster-background]"
-    )
-    .forEach(element => {
+      <div class="screening-container">
 
-      element.style.backgroundImage =
-        `url("${POSTER_URL}")`;
 
-      element.style.backgroundSize =
-        "cover";
+        <!-- POSTER -->
 
-      element.style.backgroundPosition =
-        "center";
-    });
-}
+        <div class="poster-column">
 
+          <div class="poster-frame">
 
-/* =========================================================
-   RENDER EVENT
-   ========================================================= */
+            <img
+              id="posterImage"
+              class="poster-image"
+              data-poster
+              src="./mirchi-poster.png"
+              alt="Mirchi screening poster"
+            >
 
-function renderEvent() {
+          </div>
 
-  setText(
-    "#heroMovie",
-    config.movieTitle
-  );
+        </div>
 
-  setText(
-    "#posterMovie",
-    config.movieTitle
-  );
 
-  setText(
-    "#movieTitle",
-    config.movieTitle
-  );
+        <!-- DETAILS -->
 
-  setText(
-    "#eventDate",
-    config.eventDate
-  );
+        <div class="details-column">
 
-  setText(
-    "#eventTime",
-    config.eventTime
-  );
+          <p class="event-eyebrow">
+            THE FILMMAKER CLUB PRESENTS
+          </p>
 
-  setText(
-    "#eventVenue",
-    config.eventVenue
-  );
+          <h2
+            class="event-title"
+            id="movieTitle"
+          >
+            MIRCHI
+          </h2>
 
-  setText(
-    "#eventDescription",
-    config.eventDescription
-  );
 
+          <div class="event-info">
 
-  const price =
-    Number(config.ticketPrice);
 
+            <div class="info-item">
 
-  setText(
-    "#ticketPrice",
-    price === 0
-      ? "FREE"
-      : `₹${price}`
-  );
+              <span class="info-label">
+                DATE
+              </span>
 
+              <span
+                class="event-date"
+                id="eventDate"
+              >
+                16 September 2026
+              </span>
 
-  setText(
-    "#ticketsLeft",
-    Math.max(
-      0,
-      config.ticketCapacity -
-      getLocalSold()
-    )
-  );
+            </div>
 
 
-  const quantity =
-    $("#quantity") ||
-    $("#bookingQty");
+            <div class="info-item">
 
+              <span class="info-label">
+                TIME
+              </span>
 
-  if (quantity) {
+              <span
+                class="event-time"
+                id="eventTime"
+              >
+                12:00 PM
+              </span>
 
-    quantity.innerHTML = "";
+            </div>
 
-    for (
-      let i = 1;
-      i <= config.maxPerBooking;
-      i++
-    ) {
 
-      const option =
-        document.createElement(
-          "option"
-        );
+            <div class="info-item">
 
-      option.value =
-        String(i);
+              <span class="info-label">
+                VENUE
+              </span>
 
-      option.textContent =
-        `${i} ${
-          i === 1
-            ? "ticket"
-            : "tickets"
-        }`;
+              <span
+                class="event-venue"
+                id="eventVenue"
+              >
+                Purna Hall
+              </span>
 
-      quantity.appendChild(
-        option
-      );
-    }
-  }
+            </div>
 
 
-  setupPoster();
+            <div class="info-item">
 
-  refreshAvailability();
-}
+              <span class="info-label">
+                TICKETS
+              </span>
 
+              <span
+                class="ticket-price"
+                id="ticketPrice"
+              >
+                FREE
+              </span>
 
-/* =========================================================
-   AVAILABILITY
-   ========================================================= */
+            </div>
 
-async function refreshAvailability() {
+          </div>
 
-  let sold =
-    getLocalSold();
 
-  try {
+          <p
+            class="event-description"
+            id="eventDescription"
+          >
+            Join The Filmmaker Club for a special
+            screening of Mirchi.
+          </p>
 
-    if (activeEvent) {
 
-      const rows =
-        await supabaseFetch(
-          `/rest/v1/bookings` +
-          `?select=quantity` +
-          `&event_id=eq.${encodeURIComponent(
-            activeEvent.id
-          )}` +
-          `&status=eq.confirmed`
-        );
+          <!-- AVAILABILITY -->
 
+          <div class="availability-box">
 
-      if (Array.isArray(rows)) {
+            <span class="availability">
 
-        sold =
-          rows.reduce(
-            (total, row) =>
-              total +
-              Number(
-                row.quantity || 0
-              ),
-            0
-          );
-      }
-    }
+              <strong id="ticketsLeft">
+                130
+              </strong>
 
-  } catch (error) {
+              SEATS AVAILABLE
 
-    console.warn(
-      "Availability fallback:",
-      error
-    );
-  }
+            </span>
 
+          </div>
 
-  const left =
-    Math.max(
-      0,
-      config.ticketCapacity -
-      sold
-    );
 
+          <div class="stock-bar">
 
-  setText(
-    "#ticketsLeft",
-    left
-  );
+            <div
+              class="stock-fill"
+              id="stockFill"
+            ></div>
 
-  setText(
-    "#adminSold",
-    sold
-  );
+          </div>
 
-  setText(
-    "#adminRemaining",
-    left
-  );
 
+          <button
+            type="button"
+            class="book-now primary-button"
+            data-booking
+          >
+            BOOK YOUR TICKETS
+          </button>
 
-  const percentage =
-    config.ticketCapacity
-      ? Math.min(
-          100,
-          (sold /
-            config.ticketCapacity) *
-            100
-        )
-      : 0;
+        </div>
 
+      </div>
 
-  const bar =
-    $("#barFill");
+    </section>
 
-  if (bar) {
 
-    bar.style.width =
-      `${percentage}%`;
-  }
+    <!-- =========================================
+         ABOUT
+    ========================================== -->
 
+    <section
+      class="about-section"
+      id="about"
+    >
 
-  const stockFill =
-    $("#stockFill");
+      <div class="about-container">
 
-  if (stockFill) {
+        <div class="about-heading">
 
-    stockFill.style.width =
-      `${percentage}%`;
-  }
-}
+          <p class="section-kicker">
+            ABOUT
+          </p>
 
+          <h2 class="about-title">
+            THE FILMMAKER CLUB
+          </h2>
 
-/* =========================================================
-   MODALS
-   ========================================================= */
+        </div>
 
-function openBooking() {
 
-  refreshAvailability();
+        <div class="about-copy">
 
-  const modal =
-    $("#bookingModal");
+          <p class="about-text">
+            A community built around cinema,
+            storytelling and unforgettable
+            screening experiences.
+          </p>
 
-  if (modal) {
+          <p class="about-signature">
+            THE FILMMAKER CLUB
+          </p>
 
-    modal.classList.add(
-      "open"
-    );
+        </div>
 
-    modal.classList.add(
-      "show"
-    );
-  }
-}
+      </div>
 
-function closeBooking() {
+    </section>
 
-  const modal =
-    $("#bookingModal");
 
-  if (modal) {
+    <!-- =========================================
+         CALL TO ACTION
+    ========================================== -->
 
-    modal.classList.remove(
-      "open"
-    );
+    <section class="cta-section">
 
-    modal.classList.remove(
-      "show"
-    );
-  }
-}
+      <div class="cta-content">
 
-function closeTicket() {
+        <p class="cta-kicker">
+          RESERVE YOUR SEAT
+        </p>
 
-  const modal =
-    $("#ticketModal");
+        <h2 class="cta-title">
+          SEE YOU AT THE SCREENING.
+        </h2>
 
-  if (modal) {
+        <button
+          type="button"
+          class="book-now cta-button"
+          data-booking
+        >
+          BOOK NOW
+        </button>
 
-    modal.classList.remove(
-      "open"
-    );
+      </div>
 
-    modal.classList.remove(
-      "show"
-    );
-  }
-}
+    </section>
 
-function closeModals() {
+  </main>
 
-  document
-    .querySelectorAll(".modal")
-    .forEach(modal => {
 
-      modal.classList.remove(
-        "open",
-        "show"
-      );
-    });
-}
+  <!-- =========================================
+       BOOKING MODAL
+  ========================================== -->
 
+  <div
+    class="modal"
+    id="bookingModal"
+    aria-hidden="true"
+  >
 
-function openWaitlist() {
+    <div class="modal-content">
 
-  const modal =
-    $("#waitlistModal");
+      <button
+        type="button"
+        class="modal-close"
+        data-close-booking
+        aria-label="Close booking"
+      >
+        ×
+      </button>
 
-  if (modal) {
 
-    modal.classList.add(
-      "open"
-    );
+      <div class="modal-header">
 
-    modal.classList.add(
-      "show"
-    );
-  }
-}
+        <p class="section-kicker">
+          THE FILMMAKER CLUB
+        </p>
 
+        <h2>
+          RESERVE YOUR SEAT
+        </h2>
 
-window.openBooking =
-  openBooking;
+        <p>
+          MIRCHI • 16 SEPTEMBER 2026
+        </p>
 
-window.closeBooking =
-  closeBooking;
+      </div>
 
-window.closeTicket =
-  closeTicket;
 
-window.closeModals =
-  closeModals;
+      <form
+        id="bookingForm"
+        class="booking-form"
+      >
 
-window.openWaitlist =
-  openWaitlist;
 
+        <!-- NAME -->
 
-/* =========================================================
-   CREATE BOOKING
-   ========================================================= */
+        <div class="form-group">
 
-async function createBooking(customer) {
+          <label for="bookingName">
+            NAME
+          </label>
 
-  if (!activeEvent) {
+          <input
+            type="text"
+            id="bookingName"
+            name="name"
+            placeholder="Your full name"
+            required
+          >
 
-    throw new Error(
-      "No active event."
-    );
-  }
+        </div>
 
 
-  const bookingCode =
-    "TFC-" +
-    Math.random()
-      .toString(36)
-      .slice(2, 8)
-      .toUpperCase();
+        <!-- PHONE -->
 
+        <div class="form-group">
 
-  const payload = {
+          <label for="bookingPhone">
+            PHONE
+          </label>
 
-    event_id:
-      activeEvent.id,
+          <input
+            type="tel"
+            id="bookingPhone"
+            name="phone"
+            placeholder="Your phone number"
+            required
+          >
 
-    booking_code:
-      bookingCode,
+        </div>
 
-    customer_name:
-      customer.name,
 
-    customer_phone:
-      customer.phone,
+        <!-- EMAIL -->
 
-    customer_email:
-      customer.email,
+        <div class="form-group">
 
-    quantity:
-      customer.quantity,
+          <label for="bookingEmail">
+            EMAIL
+          </label>
 
-    status:
-      "pending"
-  };
+          <input
+            type="email"
+            id="bookingEmail"
+            name="email"
+            placeholder="Your email address"
+            required
+          >
 
+        </div>
 
-  const result =
-    await supabaseFetch(
-      "/rest/v1/bookings",
-      {
 
-        method: "POST",
+        <!-- QUANTITY -->
 
-        headers: {
-          Prefer:
-            "return=representation"
-        },
+        <div class="form-group">
 
-        body:
-          JSON.stringify(payload)
-      }
-    );
+          <label for="bookingQty">
+            NUMBER OF TICKETS
+          </label>
 
+          <select
+            id="bookingQty"
+            name="quantity"
+          >
 
-  return (
-    result?.[0] ||
-    payload
-  );
-}
+            <option value="1">
+              1 ticket
+            </option>
 
+            <option value="2">
+              2 tickets
+            </option>
 
-/* =========================================================
-   BOOKING FORM
-   ========================================================= */
+          </select>
 
-const bookingForm =
-  $("#bookingForm");
+        </div>
 
 
-bookingForm?.addEventListener(
-  "submit",
-  async event => {
+        <!-- SUMMARY -->
 
-    event.preventDefault();
+        <div class="booking-summary">
 
+          <div>
 
-    const name =
-      $("#name")?.value?.trim() ||
-      $("#bookingName")?.value?.trim() ||
-      "";
+            <span>
+              EVENT
+            </span>
 
+            <strong id="posterMovie">
+              MIRCHI
+            </strong>
 
-    const phone =
-      $("#phone")?.value?.trim() ||
-      $("#bookingPhone")?.value?.trim() ||
-      "";
+          </div>
 
 
-    const email =
-      $("#email")?.value?.trim() ||
-      $("#bookingEmail")?.value?.trim() ||
-      "";
+          <div>
 
+            <span>
+              DATE
+            </span>
 
-    const quantity =
-      Number(
-        $("#quantity")?.value ||
-        $("#bookingQty")?.value ||
-        1
-      );
+            <strong>
+              16 SEP 2026
+            </strong>
 
+          </div>
 
-    if (
-      !name ||
-      !phone ||
-      !email
-    ) {
 
-      alert(
-        "Please enter your name, phone number and email."
-      );
+          <div>
 
-      return;
-    }
+            <span>
+              PRICE
+            </span>
 
+            <strong class="ticket-price">
+              FREE
+            </strong>
 
-    if (
-      quantity < 1 ||
-      quantity >
-        config.maxPerBooking
-    ) {
+          </div>
 
-      alert(
-        `Maximum ${config.maxPerBooking} tickets per booking.`
-      );
+        </div>
 
-      return;
-    }
 
+        <button
+          type="submit"
+          class="submit-booking"
+        >
+          CONFIRM BOOKING
+        </button>
 
-    try {
+      </form>
 
-      const button =
-        bookingForm.querySelector(
-          "button[type='submit']"
-        );
+    </div>
 
+  </div>
 
-      if (button) {
 
-        button.disabled =
-          true;
+  <!-- =========================================
+       TICKET MODAL
+  ========================================== -->
 
-        button.textContent =
-          "Booking...";
-      }
+  <div
+    class="modal"
+    id="ticketModal"
+  >
 
+    <div class="modal-content ticket-content">
 
-      const ticket =
-        await createBooking({
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeTicket()"
+      >
+        ×
+      </button>
 
-          name,
-          phone,
-          email,
-          quantity
-        });
 
+      <p class="section-kicker">
+        THE FILMMAKER CLUB
+      </p>
 
-      const localBookings =
-        JSON.parse(
-          localStorage.getItem(
-            LOCAL_BOOKINGS_KEY
-          ) || "[]"
-        );
+      <h2>
+        BOOKING RECEIVED
+      </h2>
 
 
-      localBookings.push({
+      <div class="ticket-card">
 
-        ...ticket,
+        <p>
+          BOOKING CODE
+        </p>
 
-        customer_name:
-          name,
+        <h3 id="ticketCode">
+          TFC-XXXXXX
+        </h3>
 
-        quantity,
 
-        created_at:
-          new Date().toISOString()
-      });
+        <div class="ticket-details">
 
+          <div>
+            <span>
+              NAME
+            </span>
 
-      localStorage.setItem(
-        LOCAL_BOOKINGS_KEY,
-        JSON.stringify(
-          localBookings
-        )
-      );
+            <strong id="ticketName">
+              —
+            </strong>
+          </div>
 
 
-      saveLocalSold(
-        getLocalSold() +
-        quantity
-      );
+          <div>
+            <span>
+              MOVIE
+            </span>
 
+            <strong id="ticketMovie">
+              MIRCHI
+            </strong>
+          </div>
 
-      setText(
-        "#ticketCode",
-        ticket.booking_code
-      );
 
-      setText(
-        "#ticketName",
-        name
-      );
+          <div>
+            <span>
+              DATE
+            </span>
 
-      setText(
-        "#ticketGuest",
-        name
-      );
+            <strong id="ticketDate">
+              16 September 2026
+            </strong>
+          </div>
 
-      setText(
-        "#ticketMovie",
-        config.movieTitle
-      );
 
-      setText(
-        "#ticketEventTitle",
-        config.movieTitle
-      );
+          <div>
+            <span>
+              TIME
+            </span>
 
-      setText(
-        "#ticketDate",
-        config.eventDate
-      );
+            <strong id="ticketTime">
+              12:00 PM
+            </strong>
+          </div>
 
-      setText(
-        "#ticketTime",
-        config.eventTime
-      );
 
-      setText(
-        "#ticketVenue",
-        config.eventVenue
-      );
+          <div>
+            <span>
+              VENUE
+            </span>
 
-      setText(
-        "#ticketQty",
-        `${quantity} ${
-          quantity === 1
-            ? "ticket"
-            : "tickets"
-        }`
-      );
+            <strong id="ticketVenue">
+              Purna Hall
+            </strong>
+          </div>
 
 
-      closeBooking();
+          <div>
+            <span>
+              TICKETS
+            </span>
 
+            <strong id="ticketQty">
+              1 ticket
+            </strong>
+          </div>
 
-      const ticketModal =
-        $("#ticketModal");
+        </div>
 
+      </div>
 
-      if (ticketModal) {
+    </div>
 
-        ticketModal.classList.add(
-          "open"
-        );
+  </div>
 
-        ticketModal.classList.add(
-          "show"
-        );
-      }
 
+  <!-- =========================================
+       WAITLIST MODAL
+  ========================================== -->
 
-      bookingForm.reset();
+  <div
+    class="modal"
+    id="waitlistModal"
+  >
 
+    <div class="modal-content">
 
-      await refreshAvailability();
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeModals()"
+      >
+        ×
+      </button>
 
+      <p class="section-kicker">
+        WAITLIST
+      </p>
 
-      alert(
-        "Booking received successfully!"
-      );
+      <h2>
+        JOIN THE WAITLIST
+      </h2>
 
+      <p>
+        If seats become available,
+        we'll let you know.
+      </p>
 
-    } catch (error) {
+    </div>
 
-      console.error(
-        error
-      );
+  </div>
 
-      alert(
-        "Booking failed. Please try again."
-      );
 
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
 
-    } finally {
+  <footer class="site-footer">
 
-      const button =
-        bookingForm.querySelector(
-          "button[type='submit']"
-        );
+    <div class="footer-inner">
 
+      <p class="footer-text">
+        The Filmmaker Club
+      </p>
 
-      if (button) {
+      <p class="footer-social">
+        @thefilmmakerclub
+      </p>
 
-        button.disabled =
-          false;
+    </div>
 
-        button.textContent =
-          "CONFIRM BOOKING";
-      }
-    }
-  }
-);
+  </footer>
 
 
-/* =========================================================
-   FREE TICKET TOTAL
-   ========================================================= */
+  <!-- =========================================
+       JAVASCRIPT
+  ========================================== -->
 
-const quantitySelector =
-  $("#quantity") ||
-  $("#bookingQty");
+  <script src="app.js"></script>
 
-
-quantitySelector?.addEventListener(
-  "change",
-  () => {
-
-    const quantity =
-      Number(
-        quantitySelector.value || 1
-      );
-
-
-    const total =
-      quantity *
-      Number(
-        config.ticketPrice || 0
-      );
-
-
-    setText(
-      "#bookingTotal",
-      total === 0
-        ? "FREE"
-        : `₹${total}`
-    );
-  }
-);
-
-
-/* =========================================================
-   START
-   ========================================================= */
-
-(async function init() {
-
-  await loadEvent();
-
-  renderEvent();
-
-})();
+</body>
+</html>
