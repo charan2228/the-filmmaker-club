@@ -121,20 +121,12 @@ function setText(selector, value) {
    ============================================================ */
 
 function supabaseHeaders(extra = {}) {
-
   return {
     apikey: SUPABASE_PUBLISHABLE_KEY,
-
-    Authorization:
-      `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-
-    "Content-Type":
-      "application/json",
-
+    "Content-Type": "application/json",
     ...extra
   };
 }
-
 
 /* ============================================================
    SUPABASE FETCH
